@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Http;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using SharedListApi.Applications.ListCollection;
 
@@ -20,16 +16,15 @@ namespace SharedListApi.Controllers
         }
 
         [HttpGet()]
-        public IEnumerable<ListCollection> ListCollections(string id = "")
+        public IEnumerable<ListCollection> ListCollections(string id = "", int skip = 0, int take = 10)
         {
-            return _listCollectionsApplication.List();
+            return _listCollectionsApplication.List(id, skip, take);
         }
 
         [HttpPost]
         public CreatedResult Post([FromBody] ListCollection collection)
         {
             var newCollection = _listCollectionsApplication.Create(collection.Name);
-
             return Created("/api/0_1/ListCollections?id=" + newCollection.Id, newCollection);
         }
 

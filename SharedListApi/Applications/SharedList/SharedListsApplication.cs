@@ -1,43 +1,115 @@
-﻿using System;
+﻿using Nest;
+using SharedListApi.Applications.Cache;
+using SharedListApi.Applications.ListCollection;
+using SharedListApi.Applications.Search;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace SharedListApi.Applications.SharedList
 {
     public class SharedListsApplication : ISharedListsApplication
     {
-        private List<SharedList> _sharedLists = new List<SharedList>();
+        private readonly ICacheApplication _cache;
+
+        public SharedListsApplication(ICacheApplication cacheApplicaion)
+        {
+            _cache = cacheApplicaion;
+        }
 
         public SharedList Create(SharedList list)
         {
             var created = DateTime.UtcNow;
-            list.Id = HttpUtility.UrlEncode(list.Name + created.ToString("-yyyyMMdd-HHmmss"));
+            list.Id = ListCollectionsApplication.CreateId(list.Name);
             list.Created = created;
-            _sharedLists.Add(list);
+
+            var response = SearchClient.Instance.IndexDocument(list);
+            if (!response.IsValid)
+            {
+                throw new ApplicationException(response.ServerError.Error.Reason);
+            }
+
+            _cache.Add<SharedList>(CreateCacheKey(list.Id), list);
 
             return list;
         }
 
         public IEnumerable<SharedList> Read(string listCollectionId, string id = null)
         {
-            return _sharedLists.Where(
-                x => x.listCollectionId == listCollectionId
-                && (id == null || x.Id == id));
+            var musts = new List<QueryContainer> {
+                new QueryContainer(new TermQuery
+                    {
+                        Field = "listCollectionId",
+                        Value = listCollectionId
+                     })
+            };
+
+            if (id != null)
+            {
+                var cached = _cache.Get<SharedList>(CreateCacheKey(id));
+                if (cached != null) return new List<SharedList> { cached }; 
+                musts.Add(new QueryContainer(new TermQuery
+                {
+                    Field = "id",
+                    Value = id
+                }));
+            }
+
+            var query = new BoolQuery();
+            query.Must = musts;
+
+            var searchRequest = new SearchRequest
+            {
+                From = 0,
+                Size = 10,
+                Query = query,
+                Sort = new List<ISort>
+                {
+                    new FieldSort{Field="created", Order=SortOrder.Descending}
+                }
+            };
+
+            List<SharedList> documents = new List<SharedList>();
+            foreach(var document in SearchClient.Instance.Search<SharedList>(searchRequest).Documents)
+            {
+                if (_cache.Get<string>(CreateDeletedCacheKey(document.Id)) != null) continue;
+                var cached = _cache.Get<SharedList>(CreateCacheKey(document.Id));
+                documents.Add(cached != null ? cached : document);
+            }
+
+            return documents;
         }
 
         public SharedList Update(SharedList list)
         {
-            Delete(list.Id);
-            _sharedLists.Add(list);
+            var response = SearchClient.Instance.Update<SharedList>(list.Id, u => u.Index("sharedlist").Doc(list));
+            if (!response.IsValid)
+            {
+                throw new ApplicationException(response.ServerError.Error.Reason);
+            }
+
+            _cache.Add<SharedList>(CreateCacheKey(list.Id), list);
 
             return list;
         }
 
         public void Delete(string id)
         {
-            _sharedLists.Remove(_sharedLists.Where(x => x.Id == id).Single());
+            var response = SearchClient.Instance.Delete<SharedList>(id);
+            if (!response.IsValid)
+            {
+                throw new ApplicationException(response.ServerError.Error.Reason);
+            }
+            _cache.Add<string>(CreateDeletedCacheKey(id), id);
+        }
+
+        private string CreateDeletedCacheKey(string id)
+        {
+            return "Deleted_" + id;
+        }
+
+        private string CreateCacheKey(string id)
+        {
+            return id;
         }
     }
 }

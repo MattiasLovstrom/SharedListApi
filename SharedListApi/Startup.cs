@@ -14,6 +14,9 @@ using Microsoft.OpenApi.Models;
 using SharedListApi.Applications.Languages;
 using SharedListApi.Applications.ListCollection;
 using SharedListApi.Applications.SharedList;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
+using SharedListApi.Applications.Cache;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace SharedListApi
 {
@@ -31,15 +34,17 @@ namespace SharedListApi
         {
             services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-            });
+            
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            //});
             
             services.AddSingleton<ISharedListsApplication, SharedListsApplication>();
             services.AddSingleton<ILanguagesApplication, LanguagesApplication>();
             services.AddSingleton<IListCollectionsApplication, ListCollectionsApplication>();
+            services.AddSingleton<ICacheApplication, CacheApplication>();
+            services.AddSingleton<IMemoryCache, MemoryCache>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,14 +64,32 @@ namespace SharedListApi
             {
                 app.UseHsts();
             }
-
-            app.UseHttpsRedirection();
-            app.UseMvc();
-            
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            //app.UseHttpsRedirection();
+            //app.UseMvc();
+            app.UseMvc(routes =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action=Index}/{id?}");
+            });
+            //app.UseSwagger();
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            //});
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+
+                spa.Options.SourcePath = "ClientApp";
+
+                //if (env.IsDevelopment())
+                //{
+                //    spa.UseAngularCliServer(npmScript: "start");
+                //}
             });
 
             //app.UseRouting();
