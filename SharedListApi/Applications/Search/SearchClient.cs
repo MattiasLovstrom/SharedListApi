@@ -29,8 +29,8 @@ namespace SharedListApi.Applications.Search
                 // curl - X POST "localhost:9200/_reindex?pretty" - H "Content-Type: application/json" - d "{\"source\": {\"index\": \"listcollection\"},\"dest\": {\"index\": \"listcollection1\"}}"
 
 
-                client.Indices.Create("sharedlist", c => c.Map<SharedList.SharedList>(m => m.AutoMap<SharedList.SharedList>()));
-                client.Indices.Create("listcollection1", c => c.Map<ListCollection.ListCollection>(m => m.AutoMap<ListCollection.ListCollection>()));
+                //client.Indices.Create("sharedlist", c => c.Map<SharedList.SharedList>(m => m.AutoMap<SharedList.SharedList>()));
+                //client.Indices.Create("listcollection1", c => c.Map<ListCollection.ListCollection>(m => m.AutoMap<ListCollection.ListCollection>()));
 
                 return client;
             }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SharedListApi.Applications.SharedList;
 
@@ -16,9 +17,9 @@ namespace SharedListApi.Controllers
         }
 
         [HttpGet()]
-        public IEnumerable<SharedList> Read(string listCollectionId, string id = null)
+        public IEnumerable<SharedList> Read(string listCollectionId, string id = null, int skip = 0, int take = 10)
         {
-            return _sharedListsApplication.Read(listCollectionId, id);
+            return _sharedListsApplication.Read(listCollectionId, id).Skip(skip).Take(take);
         }
 
         [HttpPost]

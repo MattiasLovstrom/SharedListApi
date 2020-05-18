@@ -19,9 +19,14 @@ namespace SharedListApi.Applications.SharedList
         public SharedList Create(SharedList list)
         {
             var created = DateTime.UtcNow;
-            list.Id = ListCollectionsApplication.CreateId(list.Name);
-            list.Created = created;
 
+            if (list.Created.Year <= 1)
+            {
+                list.Created = created;
+            }
+
+            list.Id = ListCollectionsApplication.CreateId(list.Name, created);
+            
             var response = SearchClient.Instance.IndexDocument(list);
             if (!response.IsValid)
             {
@@ -33,7 +38,7 @@ namespace SharedListApi.Applications.SharedList
             return list;
         }
 
-        public IEnumerable<SharedList> Read(string listCollectionId, string id = null)
+        public IEnumerable<SharedList> Read(string listCollectionId, string id = null, int skip = 0, int take = 10)
         {
             var musts = new List<QueryContainer> {
                 new QueryContainer(new TermQuery
@@ -60,7 +65,7 @@ namespace SharedListApi.Applications.SharedList
             var searchRequest = new SearchRequest
             {
                 From = 0,
-                Size = 10,
+                Size = 1000,
                 Query = query,
                 Sort = new List<ISort>
                 {

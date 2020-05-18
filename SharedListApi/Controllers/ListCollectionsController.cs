@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using SharedListApi.Applications.ListCollection;
 
@@ -37,7 +38,8 @@ namespace SharedListApi.Controllers
         [HttpDelete()]
         public void Delete(string id)
         {
-            _listCollectionsApplication.Delete(id);
+            throw new ApplicationException();
+            //_listCollectionsApplication.Delete(id);
         }
     }
 }

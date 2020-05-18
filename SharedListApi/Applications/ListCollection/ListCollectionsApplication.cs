@@ -2,10 +2,7 @@
 using SharedListApi.Applications.Search;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace SharedListApi.Applications.ListCollection
 {
@@ -17,15 +14,20 @@ namespace SharedListApi.Applications.ListCollection
             { 'ä','a' },
             { 'ö','o' }
         };
-        public static string CreateId(string name)
+        public static string CreateId(string name, DateTime? dateTime = null)
         {
+            if (dateTime == null)
+            {
+                dateTime = DateTime.UtcNow;
+            }
+
             name = name.ToLower();
             foreach (var replace in _replace)
             {
                 name = name.Replace(replace.Key, replace.Value);
             }
             name = Regex.Replace(name, @"[^a-zA-Z0-9]", "_");
-            name = name + DateTime.UtcNow.ToString("_yyyyMMdd_HHmmss");
+            name = name + dateTime.Value.ToString("_yyyyMMdd_HHmmss");
 
             return name;
         }
