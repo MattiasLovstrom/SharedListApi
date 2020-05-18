@@ -1,0 +1,1 @@
+[{"rows":["Auto sort","Skall ej gå att skapa collektuoner utan namn","Delete skall endast markera som deleted"],"id":"features_20200503_165852","created":"2020-05-03T16:58:52.9270769Z","name":"Features","category":null,"listCollectionId":"shared_list_20200503_165814","languageId":"en-US"}]

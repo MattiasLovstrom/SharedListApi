@@ -1,0 +1,1 @@
+[{"rows":[],"id":"test_lista__20200420_135038","created":"2020-04-20T13:50:38.6581915Z","name":"Test lista ","category":null,"listCollectionId":"test_20200420_135020","languageId":"en-US"}]
