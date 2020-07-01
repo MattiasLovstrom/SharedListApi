@@ -38,8 +38,7 @@ namespace SharedListApi.Controllers
         [HttpDelete()]
         public void Delete(string id)
         {
-            throw new ApplicationException();
-            //_listCollectionsApplication.Delete(id);
+            _listCollectionsApplication.Delete(id);
         }
     }
 }

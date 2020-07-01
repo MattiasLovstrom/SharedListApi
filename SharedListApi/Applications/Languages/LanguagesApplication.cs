@@ -6,11 +6,14 @@ namespace SharedListApi.Applications.Languages
     {
         public IEnumerable<Language> List()
         {
-            return new Language[] {
-                    new Language("", "Any"),
-                    new Language("sv", "Sveska"),
-                    new Language("en", "English")
-                };
+            var languages = new List<Language>
+            {
+                new Language("", "Any")
+            };
+
+            languages.AddRange(new LanguageRepository().Read(null, 0, 1000));
+
+            return languages;
         }
     }
 }

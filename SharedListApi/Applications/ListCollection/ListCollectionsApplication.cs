@@ -1,6 +1,4 @@
-﻿using Nest;
-using SharedListApi.Applications.Search;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -14,6 +12,7 @@ namespace SharedListApi.Applications.ListCollection
             { 'ä','a' },
             { 'ö','o' }
         };
+        
         public static string CreateId(string name, DateTime? dateTime = null)
         {
             if (dateTime == null)
@@ -39,54 +38,20 @@ namespace SharedListApi.Applications.ListCollection
                 Id = CreateId(name),
                 Name = name
             };
-            var response = SearchClient.Instance.IndexDocument(newCollection);
-            if (!response.IsValid)
-            {
-                throw new ApplicationException(response.ServerError.Error.Reason);
-            }
+            new ListCollectionRepository().Create(newCollection);
+            
 
             return newCollection;
         }
 
         public void Delete(string id)
         {
-            var response = SearchClient.Instance.Delete<ListCollection>(id);
-            if (!response.IsValid)
-            {
-                throw new ApplicationException(response.ServerError.Error.Reason);
-            }
+            new ListCollectionRepository().Delete(id);
         }
 
         public IEnumerable<ListCollection> List(string id = null, int skip = 0, int take = 100)
         {
-
-            var searchRequest = new SearchRequest
-            {
-                From = skip,
-                Size = take,
-                Sort = new List<ISort>
-                {
-                    new FieldSort{Field="id", Order=SortOrder.Ascending}
-                }
-            };
-
-            if (id != null)
-            {
-                searchRequest.Query = new TermQuery
-                {
-                    Field = "id",
-                    Value = id
-                };
-            }
-            else
-            {
-                searchRequest.Query = new MatchAllQuery();
-            }
-
-            var ret = SearchClient.Instance.Search<ListCollection>(searchRequest)
-                .Documents;
-
-            return ret;
+            return new ListCollectionRepository().Read(id, skip, take);
         }
     }
 }

@@ -16,5 +16,6 @@ namespace SharedListApi.Applications.SharedList
         public string listCollectionId { get; set; }
 
         public string LanguageId { get; set; }
+        public DateTime? Deleted { get; internal set; }
     }
 }
