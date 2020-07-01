@@ -24,6 +24,7 @@ namespace SharedListApi.Applications.SharedList
             }
 
             list.Id = ListCollectionsApplication.CreateId(list.Name, created);
+            new SharedListRepository().Create(list);
             _cache.Add<SharedList>(CreateCacheKey(list.Id), list);
 
             return list;
