@@ -11,7 +11,7 @@ namespace SharedListApi.Applications.SharedList
         public DateTime Created { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
-        public List<string> Rows = new List<string>();
+        public List<Row> Rows = new List<Row>();
         [Keyword]
         public string listCollectionId { get; set; }
 

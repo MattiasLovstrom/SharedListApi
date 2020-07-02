@@ -48,7 +48,7 @@ namespace SharedListApi.Applications.SharedList
                             Category = (string)reader["category"],
                             listCollectionId = (string)reader["listcollection"],
                             LanguageId = (string)reader["language"],
-                            Rows = JsonConvert.DeserializeObject<List<string>>((string)reader["rows"]),
+                            Rows = JsonConvert.DeserializeObject<List<Row>>((string)reader["rows"]),
                             Deleted = (DateTime?)(reader["deleted"] == DBNull.Value ? null : reader["deleted"])
                         });
                     }
@@ -117,7 +117,7 @@ namespace SharedListApi.Applications.SharedList
 
         private string UpdateCommand => $"Update List set name=@name, created=@created, category=@category, listcollection=@listcollection, Language=@Language, rows=@rows WHERE id=@id";
 
-        private string DeleteCommand => $"UPDATE List SET deleted=@now WHERE id=@id)";
+        private string DeleteCommand => $"UPDATE List SET deleted=@now WHERE id=@id";
 
     }
 }

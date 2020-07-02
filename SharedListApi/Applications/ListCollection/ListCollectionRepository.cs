@@ -52,7 +52,7 @@ namespace SharedListApi.Applications.ListCollection
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand(InsertCommand, connection))
+                using (SqlCommand command = new SqlCommand(DeleteCommand, connection))
                 {
                     command.Parameters.Add("@id", SqlDbType.NVarChar).Value = id;
                     command.Parameters.Add("@now", SqlDbType.DateTime).Value = DateTime.UtcNow;
@@ -76,7 +76,7 @@ namespace SharedListApi.Applications.ListCollection
 
         private string InsertCommand => $"INSERT INTO ListCollection (id, name) VALUES (@id, @name)";
 
-        private string DeleteCommand => $"UPDATE ListCollection SET deleted=@now WHERE id=@id)";
+        private string DeleteCommand => $"UPDATE ListCollection SET deleted=@now WHERE id=@id";
 
     }
 }
