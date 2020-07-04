@@ -77,6 +77,5 @@ namespace SharedListApi.Applications.ListCollection
         private string InsertCommand => $"INSERT INTO ListCollection (id, name) VALUES (@id, @name)";
 
         private string DeleteCommand => $"UPDATE ListCollection SET deleted=@now WHERE id=@id";
-
     }
 }
