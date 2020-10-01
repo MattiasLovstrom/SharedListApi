@@ -19,12 +19,40 @@ namespace SharedListApi.Applications.SharedList
                     command.Parameters.Add("@id", SqlDbType.NVarChar).Value = list.Id;
                     command.Parameters.Add("@name", SqlDbType.NVarChar).Value = list.Name;
                     command.Parameters.Add("@created", SqlDbType.DateTime).Value = list.Created;
-                    command.Parameters.Add("@category", SqlDbType.NChar, 100).Value = list.Category??"";
+                    command.Parameters.Add("@category", SqlDbType.NChar, 100).Value = list.Category ?? "";
                     command.Parameters.Add("@listcollection", SqlDbType.NVarChar).Value = list.listCollectionId;
                     command.Parameters.Add("@Language", SqlDbType.NVarChar).Value = list.LanguageId;
                     command.Parameters.Add("@rows", SqlDbType.NVarChar).Value = JsonConvert.SerializeObject(list.Rows);
                     command.ExecuteNonQuery();
                 }
+
+                foreach (var row in list.Rows)
+                {
+                    using (SqlCommand insertRowommand = new SqlCommand(InsertRowCommand, connection))
+                    {
+                        insertRowommand.Parameters.Add("@id", SqlDbType.NVarChar).Value = row.Id;
+                        insertRowommand.Parameters.Add("@fkListId", SqlDbType.NVarChar).Value = list.Id;
+
+                        insertRowommand.ExecuteNonQuery();
+                    }
+
+                    foreach (var column in row.Columns)
+                    {
+                        using (SqlCommand insertColumnCommand = new SqlCommand(InsertColumnCommand, connection))
+                        {
+                            insertColumnCommand.Parameters.Add("@id", SqlDbType.NVarChar).Value = column.Id;
+                            insertColumnCommand.Parameters.Add("@fkRowId", SqlDbType.NVarChar).Value = row.Id;
+                            insertColumnCommand.Parameters.Add("@type", SqlDbType.NVarChar).Value = "string";
+                            insertColumnCommand.Parameters.Add("@value", SqlDbType.NVarChar).Value = column.Content;
+
+                            insertColumnCommand.ExecuteNonQuery();
+                        }
+                    }
+                }
+
+
+
+
                 connection.Close();
             }
         }
@@ -114,6 +142,10 @@ namespace SharedListApi.Applications.SharedList
         }
 
         private string InsertCommand => $"INSERT INTO List (id, name, created, category, listcollection, Language, rows) VALUES (@id, @name, @created, @category, @listcollection, @Language, @rows)";
+
+        private string InsertRowCommand => $"INSERT INTO Row (id, fkListId) VALUES (@id, @fkListId)";
+
+        private string InsertColumnCommand => $"INSERT INTO Column (id, type, value, fkRowId) VALUES (@id, @type, @value, @fkRowId)";
 
         private string UpdateCommand => $"Update List set name=@name, created=@created, category=@category, listcollection=@listcollection, Language=@Language, rows=@rows WHERE id=@id";
 
