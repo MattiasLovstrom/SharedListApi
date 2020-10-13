@@ -26,32 +26,29 @@ namespace SharedListApi.Applications.SharedList
                     command.ExecuteNonQuery();
                 }
 
-                foreach (var row in list.Rows)
-                {
-                    using (SqlCommand insertRowommand = new SqlCommand(InsertRowCommand, connection))
-                    {
-                        insertRowommand.Parameters.Add("@id", SqlDbType.NVarChar).Value = row.Id;
-                        insertRowommand.Parameters.Add("@fkListId", SqlDbType.NVarChar).Value = list.Id;
+                //foreach (var row in list.Rows)
+                //{
+                //    using (SqlCommand insertRowommand = new SqlCommand(InsertRowCommand, connection))
+                //    {
+                //        insertRowommand.Parameters.Add("@id", SqlDbType.NVarChar).Value = row.Id;
+                //        insertRowommand.Parameters.Add("@fkListId", SqlDbType.NVarChar).Value = list.Id;
 
-                        insertRowommand.ExecuteNonQuery();
-                    }
+                //        insertRowommand.ExecuteNonQuery();
+                //    }
 
-                    foreach (var column in row.Columns)
-                    {
-                        using (SqlCommand insertColumnCommand = new SqlCommand(InsertColumnCommand, connection))
-                        {
-                            insertColumnCommand.Parameters.Add("@id", SqlDbType.NVarChar).Value = column.Id;
-                            insertColumnCommand.Parameters.Add("@fkRowId", SqlDbType.NVarChar).Value = row.Id;
-                            insertColumnCommand.Parameters.Add("@type", SqlDbType.NVarChar).Value = "string";
-                            insertColumnCommand.Parameters.Add("@value", SqlDbType.NVarChar).Value = column.Content;
+                //    foreach (var column in row.Columns)
+                //    {
+                //        using (SqlCommand insertColumnCommand = new SqlCommand(InsertColumnCommand, connection))
+                //        {
+                //            insertColumnCommand.Parameters.Add("@id", SqlDbType.NVarChar).Value = column.Id;
+                //            insertColumnCommand.Parameters.Add("@fkRowId", SqlDbType.NVarChar).Value = row.Id;
+                //            insertColumnCommand.Parameters.Add("@type", SqlDbType.NVarChar).Value = "string";
+                //            insertColumnCommand.Parameters.Add("@value", SqlDbType.NVarChar).Value = column.Content;
 
-                            insertColumnCommand.ExecuteNonQuery();
-                        }
-                    }
-                }
-
-
-
+                //            insertColumnCommand.ExecuteNonQuery();
+                //        }
+                //    }
+                //}
 
                 connection.Close();
             }

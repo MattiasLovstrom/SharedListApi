@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using SharedListApi.Applications.Cache;
 using SharedListApi.Applications.Languages;
 using SharedListApi.Applications.ListCollection;
+using SharedListApi.Applications.ListTypesApplication;
 using SharedListApi.Applications.SharedList;
 
 namespace SharedListApi
@@ -34,6 +35,7 @@ namespace SharedListApi
             services.AddSingleton<ISharedListsApplication, SharedListsApplication>();
             services.AddSingleton<ILanguagesApplication, LanguagesApplication>();
             services.AddSingleton<IListCollectionsApplication, ListCollectionsApplication>();
+            services.AddSingleton<IListTypesApplication, ListTypesApplication>();
             services.AddSingleton<ICacheApplication, CacheApplication>();
             services.AddSingleton<IMemoryCache, MemoryCache>();
         }

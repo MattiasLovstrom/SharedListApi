@@ -31,12 +31,13 @@ namespace SharedListApi.Applications.ListCollection
             return name;
         }
 
-        public ListCollection Create(string name)
+        public ListCollection Create(string name, string type)
         {
             var newCollection = new ListCollection()
             {
                 Id = CreateId(name),
-                Name = name
+                Name = name,
+                Type = type
             };
             new ListCollectionRepository().Create(newCollection);
             

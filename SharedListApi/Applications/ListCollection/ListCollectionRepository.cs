@@ -17,6 +17,7 @@ namespace SharedListApi.Applications.ListCollection
                 {
                     command.Parameters.Add("@id", SqlDbType.NVarChar).Value = listCollection.Id;
                     command.Parameters.Add("@name", SqlDbType.NVarChar).Value = listCollection.Name;
+                    command.Parameters.Add("@type", SqlDbType.NVarChar).Value = listCollection.Type;
                     command.ExecuteNonQuery();
                 }
                 connection.Close();
@@ -36,8 +37,9 @@ namespace SharedListApi.Applications.ListCollection
                     {
                         list.Add(new ListCollection
                         {
-                            Id = ((string)reader["id"])?.Trim(),
-                            Name = ((string)reader["name"])?.Trim()
+                            Id = GetString(reader, "id"),
+                            Name = GetString(reader, "name"),
+                            Type = GetString(reader, "type")
                         });
                     }
                 }
@@ -45,6 +47,14 @@ namespace SharedListApi.Applications.ListCollection
             }
 
             return list;
+        }
+
+        public static string GetString(SqlDataReader reader, string name)
+        {
+            var dbValue = reader[name] as string;
+            if (dbValue == null || dbValue is DBNull) return null;
+
+            return dbValue.Trim();
         }
 
         internal void Delete(string id)
@@ -74,7 +84,7 @@ namespace SharedListApi.Applications.ListCollection
             return command;
         }
 
-        private string InsertCommand => $"INSERT INTO ListCollection (id, name) VALUES (@id, @name)";
+        private string InsertCommand => $"INSERT INTO ListCollection (id, name, type) VALUES (@id, @name, @type)";
 
         private string DeleteCommand => $"UPDATE ListCollection SET deleted=@now WHERE id=@id";
     }

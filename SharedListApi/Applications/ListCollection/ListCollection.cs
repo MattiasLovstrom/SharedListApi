@@ -10,5 +10,6 @@ namespace SharedListApi.Applications.ListCollection
         public string Id { get; set; }
         [Keyword]
         public string Name { get; set; }
+        public string Type { get; set; }
     }
 }

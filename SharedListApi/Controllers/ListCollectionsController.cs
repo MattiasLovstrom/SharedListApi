@@ -25,7 +25,7 @@ namespace SharedListApi.Controllers
         [HttpPost]
         public CreatedResult Post([FromBody] ListCollection collection)
         {
-            var newCollection = _listCollectionsApplication.Create(collection.Name);
+            var newCollection = _listCollectionsApplication.Create(collection.Name, collection.Type);
             return Created("/api/0_1/ListCollections?id=" + newCollection.Id, newCollection);
         }
 
