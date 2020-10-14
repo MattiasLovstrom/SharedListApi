@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SharedListApi.Applications.ListTypesApplication
 {
@@ -25,36 +23,55 @@ namespace SharedListApi.Applications.ListTypesApplication
                     Id = "list",
                     Name ="list",
                     Columns = new List<ColumnType>{
-                        new ColumnType
-                        {
+                        new ColumnType 
+                        { 
+                            Id = "done",
                             Type = "done"
                         },
                         new ColumnType
                         {
+                            Id = "text",
                             Type = "text"
                         }
                     }
                 },
                 new ListType
                 {
-                    Id = "traning",
+                    Id = "training",
                     Name ="training",
                     Columns = new List<ColumnType>{
                         new ColumnType
                         {
-                            Type = "text"
+                            Type = "text",
+                            Id = "text"
                         },
                         new ColumnType
                         {
-                            Type = "weight"
+                            Type = "number",
+                            Id = "weight",
+                            Intervals = new List<Interval>
+                            {
+                                new Interval {Start = 1, Stop = 9, Step = 1},
+                                new Interval {Start = 10, Stop = 150, Step = 10}
+                            }
                         },
                         new ColumnType
                         {
-                            Type = "sets"
+                            Type = "number",
+                            Id = "sets",
+                            Intervals = new List<Interval>
+                            {
+                                new Interval {Start = 1, Stop = 10, Step = 1}
+                            }
                         },
                         new ColumnType
                         {
-                            Type = "reps"
+                            Type = "number",
+                            Id = "reps",
+                            Intervals = new List<Interval>
+                            {
+                                new Interval {Start = 1, Stop = 20, Step = 1}
+                            }
                         }
                     }
                 },
@@ -65,15 +82,26 @@ namespace SharedListApi.Applications.ListTypesApplication
                     Columns = new List<ColumnType>{
                         new ColumnType
                         {
+                            Id = "text",
                             Type = "text"
                         },
                         new ColumnType
                         {
-                            Type = "calory"
+                            Type = "number",
+                            Id = "carbohydrates",
+                            Intervals = new List<Interval>
+                            {
+                                new Interval {Start = 50, Stop = 1000, Step = 50}
+                            }
                         },
                         new ColumnType
                         {
-                            Type = "protine"
+                            Type = "number",
+                            Id = "protein",
+                            Intervals = new List<Interval>
+                            {
+                                new Interval {Start = 1, Stop = 100, Step = 1}
+                            }
                         }
                     }
                 }
@@ -84,5 +112,12 @@ namespace SharedListApi.Applications.ListTypesApplication
         {
             throw new NotImplementedException();
         }
+    }
+
+    public class Interval
+    {
+        public int Start { get; set; }
+        public int Stop { get; set; }
+        public int Step { get; set; }
     }
 }
