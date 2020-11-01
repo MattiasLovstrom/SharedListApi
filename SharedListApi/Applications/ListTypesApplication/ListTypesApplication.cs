@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SharedListApi.Applications.ListTypesApplication
 {
@@ -17,7 +18,7 @@ namespace SharedListApi.Applications.ListTypesApplication
 
         public IEnumerable<ListType> Read(string id, int skip, int take)
         {
-            return new List<ListType> {
+            var types = new List<ListType> {
                 new ListType
                 {
                     Id = "list",
@@ -37,8 +38,8 @@ namespace SharedListApi.Applications.ListTypesApplication
                 },
                 new ListType
                 {
-                    Id = "training",
-                    Name ="training",
+                    Id = "traning",
+                    Name ="traning",
                     Columns = new List<ColumnType>{
                         new ColumnType
                         {
@@ -106,6 +107,8 @@ namespace SharedListApi.Applications.ListTypesApplication
                     }
                 }
             };
+
+            return types.Where(x => x.Id == id);
         }
 
         public ListType Update(ListType listType)
