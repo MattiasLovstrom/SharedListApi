@@ -98,7 +98,7 @@ namespace SharedListApi.Applications.ListTypesApplication
                         new ColumnType
                         {
                             Type = "number",
-                            Id = "protein",
+                            Id = "protein", 
                             Intervals = new List<Interval>
                             {
                                 new Interval {Start = 1, Stop = 100, Step = 1}
@@ -107,6 +107,11 @@ namespace SharedListApi.Applications.ListTypesApplication
                     }
                 }
             };
+
+            if (id == null)
+            {
+                return types;
+            }
 
             return types.Where(x => x.Id == id);
         }
