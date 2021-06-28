@@ -23,7 +23,7 @@ namespace SharedListApi.Applications.SharedList
                 list.Created = created;
             }
 
-            list.Id = ListCollectionsApplication.CreateId(list.Name, created);
+            list.Id = ListCollectionsApplication.CreateId(list.Name, list.Created);
             new SharedListRepository().Create(list);
             _cache.Add<SharedList>(CreateCacheKey(list.Id), list);
 
