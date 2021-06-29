@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SharedListApi.Applications.SharedList
 {
@@ -9,7 +10,7 @@ namespace SharedListApi.Applications.SharedList
         public DateTime Created { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
-        public List<Row> Rows = new List<Row>();
+        public IEnumerable<Row> Rows = new List<Row>();
         public string listCollectionId { get; set; }
         public string LanguageId { get; set; }
         public DateTime? Deleted { get; internal set; }

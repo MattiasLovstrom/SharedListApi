@@ -73,7 +73,7 @@ namespace SharedListApi.Applications.SharedList
                             Category = (string)reader["category"],
                             listCollectionId = (string)reader["listcollection"],
                             LanguageId = (string)reader["language"],
-                            Rows = JsonConvert.DeserializeObject<List<Row>>((string)reader["rows"]),
+                            Rows = JsonConvert.DeserializeObject<IEnumerable<Row>>((string)reader["rows"]),
                             Deleted = (DateTime?)(reader["deleted"] == DBNull.Value ? null : reader["deleted"])
                         });
                     }
